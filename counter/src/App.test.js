@@ -1,79 +1,178 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
-import Counter from "./Components/Counter";
-test("Check the value", () => {
-  render(<App />);
-  let valuePresentInApp = screen.getByText(/hello single/i);
-  expect(valuePresentInApp).toBeInTheDocument();
+import SummaryForm from "./Pages/summary/SummaryForm";
+import { BrowserRouter } from "react-router-dom";
+import AllRouter from "./routes/AllRouter";
+import OrderSummary from "./Pages/summary/OrderSummary";
+test("renders learn react link", () => {
+  <BrowserRouter>
+    <AllRouter />
+  </BrowserRouter>;
 });
 
-//Check Image
-test("Check Image", () => {
-  render(<App />);
-  let imageCheck = screen.getByRole("img");
-  let checkAlt = screen.getByAltText("hello girl");
-  let checkTitle = screen.getByTitle("hello girl");
-  expect(imageCheck).toBeInTheDocument();
-  expect(checkAlt).toBeInTheDocument();
-  expect(checkTitle).toBeInTheDocument();
-  expect(imageCheck).toHaveAttribute("src");
+describe("Check for summaryform", () => {
+  describe("choclate summary", () => {
+    test("intially the choclate input carrry number will be 0", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const inputChoclate = screen.getByPlaceholderText(
+        "Enter the choclate amount"
+      );
+      expect(inputChoclate).toHaveValue(0);
+    });
+    test("intially the vanilla input carrry number will be 0", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const inputChoclate = screen.getByPlaceholderText(
+        "Enter the vanilla amount"
+      );
+      expect(inputChoclate).toHaveValue(0);
+    });
+    test("intially the stawberry input carrry number will be 0", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const inputChoclate = screen.getByPlaceholderText(
+        "Enter the stawberry amount"
+      );
+      expect(inputChoclate).toHaveValue(0);
+    });
+    test("by clicking value of choclate increase or not", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const inputChoclate = screen.getByPlaceholderText(
+        "Enter the choclate amount"
+      );
+      const buttonChoclateIncrease = screen.getByTestId("choclate-increase");
+      fireEvent.click(buttonChoclateIncrease);
+      expect(inputChoclate).toHaveValue(1);
+      const buttonChoclateDecrease = screen.getByTestId("choclate-decrease");
+      fireEvent.click(buttonChoclateDecrease);
+      expect(inputChoclate).toHaveValue(0);
+      //!check disabilty of button
+      expect(buttonChoclateDecrease).toBeDisabled();
+    });
+  });
+  describe("test for the vanilla summary", () => {
+    test("check initial input of vanilla is zero or not", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      let inputVanilla = screen.getByPlaceholderText(
+        "Enter the vanilla amount"
+      );
+      expect(inputVanilla).toHaveValue(0);
+    });
+    test("check button and disabled button and there input part", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const buttonVanillaIncrease = screen.getByTestId("vanilla-increase");
+      const inputVanilla = screen.getByPlaceholderText(
+        "Enter the vanilla amount"
+      );
+      fireEvent.click(buttonVanillaIncrease);
+
+      expect(inputVanilla).toHaveValue(1);
+      const buttonVanillaDecrease = screen.getByTestId("vanilla-decrease");
+      fireEvent.click(buttonVanillaDecrease);
+      expect(inputVanilla).toHaveValue(0);
+      expect(buttonVanillaDecrease).toBeDisabled();
+    });
+  });
+  describe("test for the stawberry summary", () => {
+    test("check initial input of Stawberry is zero or not", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      let inputStawberry = screen.getByPlaceholderText(
+        "Enter the stawberry amount"
+      );
+      expect(inputStawberry).toHaveValue(0);
+    });
+    test("check button and disabled button and there input part", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const buttonStawberryIncrease = screen.getByTestId("stawberry-increase");
+      const inputVanilla = screen.getByPlaceholderText(
+        "Enter the stawberry amount"
+      );
+      fireEvent.click(buttonStawberryIncrease);
+
+      expect(inputVanilla).toHaveValue(1);
+      const buttonStawberryDecrease = screen.getByTestId("stawberry-decrease");
+      fireEvent.click(buttonStawberryDecrease);
+      expect(inputVanilla).toHaveValue(0);
+      expect(buttonStawberryDecrease).toBeDisabled();
+    });
+    test("By click on order move to next Page ", () => {
+      render(
+        <BrowserRouter>
+          <SummaryForm />
+        </BrowserRouter>
+      );
+      const buttonOrder = screen.getByRole("button", { name: "Order" });
+      expect(buttonOrder).toBeInTheDocument();
+      fireEvent.click(buttonOrder);
+      // !how to check this will on next page or not
+      expect(window.location.pathname).toBe("/orderSummary");
+      //! how to check the localStorage key have provide name
+      expect(localStorage.getItem("sundae")).toBeTruthy();
+
+      let storedValue = JSON.parse(localStorage.getItem("sundae"));
+      // !check the data have the key order and totalCost are in there
+      expect(storedValue).toEqual(
+        expect.objectContaining({
+          order: expect.any(Object),
+          totalCost: expect.any(Number),
+        })
+      );
+    });
+  });
 });
 
-//*Check Input Box by name,placeholder,id,value,type;
-describe("Check input Box Test Case", () => {
-  test("Check Input Box", () => {
-    render(<App />);
+describe("check for orderSummary", () => {
+  test("check you render the orderSummary Page", () => {
+    render(
+      <BrowserRouter>
+        <OrderSummary />
+      </BrowserRouter>
+    );
+  });
+  test("check button of term and condition is visible or not", () => {
+    render(
+      <BrowserRouter>
+        <OrderSummary />
+      </BrowserRouter>
+    );
+    let inputBox = screen.getByPlaceholderText("Terms and conditions");
 
-    let checkInputBox = screen.getByRole("textbox");
-    expect(checkInputBox).toBeInTheDocument();
-  });
-  test("placeholder inside textBox", () => {
-    render(<App />);
-    let checkPlaceholder = screen.getByPlaceholderText("Enter User name");
-    expect(checkPlaceholder).toBeInTheDocument();
-  });
-  test("name altribute inside the textBox", () => {
-    render(<App />);
-    let checkInputBox = screen.getByRole("textbox");
-    expect(checkInputBox).toHaveAttribute("name", "username");
+    expect(inputBox).toBeInTheDocument();
+    expect(inputBox).not.toBeChecked();
+    fireEvent.click(inputBox);
+    let button = screen.getByRole("button", { name: "Place Order" });
+    expect(inputBox).toBeChecked();
 
-    expect(checkInputBox).toHaveAttribute("id", "username");
-    expect(checkInputBox).toHaveAttribute("type", "text");
-  });
-  test("Check by event handler", () => {
-    render(<App />);
-    let checkInputBox = screen.getByRole("textbox");
-    expect(checkInputBox).toHaveValue("");
-    fireEvent.change(checkInputBox, { target: { value: "a" } });
-    expect(checkInputBox).toHaveValue("a");
-    expect(checkInputBox.value).toBe("a");
-  });
-});
-
-describe("Counter App test Case", () => {
-  test("check render of counter APpp", () => {
-    render(<App />);
-    render(<Counter />);
-  });
-  test("button add ", () => {
-    render(<App />);
-    render(<Counter />);
-    let btnAdd = screen.getByTestId("add");
-   
-    let countText = screen.getByTestId("countText");
-    fireEvent.click(btnAdd);
-
-    
-    expect(countText).toHaveTextContent("1");
-  });
-  test("check by reducer", () => {
-    render(<App/>)
-    render(<Counter/>)
-    let btnReduce = screen.getByTestId("deleteCount");
-    let textH1tag = screen.getByTestId("countText");
-    
-    fireEvent.click(btnReduce);
- 
-    expect(textH1tag).toHaveTextContent("-1");
+    expect(button).not.toBeDisabled();
   });
 });
